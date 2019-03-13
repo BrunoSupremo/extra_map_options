@@ -1,0 +1,20 @@
+{
+	"info": {
+		"name" : "Extra Map Options",
+		"namespace" : "giant_map",
+		"version" : 3,
+		"client_only": true,
+		"steam_file_id" : "1385348318"
+	},
+	"default_locale": "en",
+	"server_init_script": "file(server)",
+	"overrides": {
+		"stonehearth/ui/shell/select_settlement/select_settlement.js":	"file(ui/shell/select_settlement/select_settlement.js)",
+		"stonehearth/ui/shell/select_settlement/select_settlement.html":"file(ui/shell/select_settlement/select_settlement.html)"
+	},
+	"ui":{
+		"less":[
+			"file(ui/shell/select_settlement/select_settlement.less)"
+		]
+	}
+}

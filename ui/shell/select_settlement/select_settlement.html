@@ -1,0 +1,139 @@
+<script type="text/x-handlebars" data-template-name="stonehearthSelectSettlement">
+	<div id="selectSettlement">
+		<a href="#" {{action "quitToMainMenu" target="view"}}>
+			<button class="quitButton">{{i18n stonehearth:ui.game.esc_menu.quit_to_menu}}</button>
+		</a>
+
+		<div id="title">{{i18n stonehearth:ui.shell.select_settlement.title}}</div>
+		<div id="loading">
+			<div id="loadingBaseText">{{i18n stonehearth:ui.shell.select_settlement.loading}}</div>
+			<div id="loadingPeriods">...</div>
+		</div>
+		<div id="map"></div>
+
+		<div id="regenerateButton">{{i18n stonehearth:ui.shell.select_settlement.regenerate_map}}</div>
+
+		<div id="worldSeed">
+			{{i18n stonehearth:ui.shell.select_settlement.world_seed}}
+			<input id="worldSeedInput" onClick="this.select();" title="{{i18n stonehearth:ui.game.common.input_text_tooltip}}" type="text" {{bind-attr value=view.world_seed}} />
+		</div>
+
+		{{#if view.seasons}}
+		<div id="startSeasonSection">
+			<div class="seasonHeader">{{i18n stonehearth:ui.shell.select_settlement.starting_season}}</div>
+
+			<table>
+				{{#each row in view.seasonRows}}
+				<tr>
+					{{#each season in row}}
+					<td class="seasonChoice" {{bind-attr data-season-id=season.id}}>
+						<input type="radio" name="seasonChoice" {{bind-attr id=season.id}} {{bind-attr data-season-start-day=season.start_day}}>
+						<label {{bind-attr for=season.id}}>{{i18n_key season.display_name}}</label>
+					</td>
+					{{/each}}
+				</tr>
+				{{/each}}
+			</table>
+		</div>
+		{{/if}}
+
+		<div id="scroll">
+			<img id="terrainPortrait" />
+			<div id="terrainType"></div>
+			<div id="terrainDescription"></div>
+			<table id="terrainStats">
+				<tr>
+					<td class="title">{{i18n stonehearth:ui.shell.select_settlement.terrain_stats.trees_and_plants_title}}</td>
+					<td id="vegetation">
+						<div class="bullet 1" />
+						<div class="bullet 2" />
+						<div class="bullet 3" />
+						<div class="bullet 4" />
+					</td>
+				</tr>
+				<tr>
+					<td colspan=2>{{i18n stonehearth:ui.shell.select_settlement.terrain_stats.trees_and_plants_description}}</td>
+				</tr>
+				<tr>
+					<td class="title">{{i18n stonehearth:ui.shell.select_settlement.terrain_stats.wildlife_title}}</td>
+					<td id="wildlife">
+						<div class="bullet 1" />
+						<div class="bullet 2" />
+						<div class="bullet 3" />
+						<div class="bullet 4" />
+					</td>
+				</tr>
+				<tr>
+					<td colspan=2>{{i18n stonehearth:ui.shell.select_settlement.terrain_stats.wildlife_description}}</td>
+				</tr>
+				<tr>
+					<td class="title">{{i18n stonehearth:ui.shell.select_settlement.terrain_stats.minerals_title}}</td>
+					<td id="minerals">
+						<div class="bullet 1" />
+						<div class="bullet 2" />
+						<div class="bullet 3" />
+						<div class="bullet 4" />
+					</td>
+				</tr>
+				<tr>
+					<td colspan=2>{{i18n stonehearth:ui.shell.select_settlement.terrain_stats.minerals_description}}</td>
+				</tr>
+			</table>
+		</div>
+
+		<div id="selectSettlementPin" title="{{i18n stonehearth:ui.shell.select_settlement.settle_at_this_location}}"></div>
+
+		<button id="open_map_options" {{action "open_map_options" target=view}}>{{i18n giant_map:ui.shell.select_settlement.open_map_options}}</button>
+
+		<div id="i_hate_wrappers" class="gui">
+			<div id="map_options" class="window">
+				<div class="title">{{i18n giant_map:ui.shell.select_settlement.open_map_options}}</div>
+				<div id="worldSize" class="option_category">
+					{{i18n giant_map:ui.shell.select_settlement.world_size.display}}
+					<input type="radio" name="worldSizeChoice" id="size1">
+					<label for="size1">{{i18n giant_map:ui.shell.select_settlement.world_size.small}}</label>
+					<input type="radio" name="worldSizeChoice" id="size2" checked>
+					<label for="size2">{{i18n giant_map:ui.shell.select_settlement.world_size.normal}}</label>
+					<input type="radio" name="worldSizeChoice" id="size4">
+					<label for="size4">{{i18n giant_map:ui.shell.select_settlement.world_size.large}}</label>
+				</div>
+				<span>{{i18n giant_map:ui.shell.select_settlement.rivers.display}}</span>
+				<div id="rivers" class="window">
+					<div class="option_category">
+						{{i18n giant_map:ui.shell.select_settlement.rivers.quantity}}
+						<input type="number" id="quantity" name="quantity" min="0" value="0" title="{{i18n stonehearth:ui.game.common.input_text_tooltip}}">
+					</div>
+					<div id="locations" class="option_category">
+						{{i18n giant_map:ui.shell.select_settlement.rivers.locations.display}}
+						<input type="checkbox" name="riverPlains" id="riverPlains" checked>
+						<label for="riverPlains">{{i18n giant_map:ui.shell.select_settlement.rivers.locations.plains}}</label>
+						<input type="checkbox" name="riverFoothills" id="riverFoothills" checked>
+						<label for="riverFoothills">{{i18n giant_map:ui.shell.select_settlement.rivers.locations.foothills}}</label>
+						<input type="checkbox" name="riverMountains" id="riverMountains" checked>
+						<label for="riverMountains">{{i18n giant_map:ui.shell.select_settlement.rivers.locations.mountains}}</label>
+					</div>
+					<div id="sizes" class="option_category">
+						{{i18n giant_map:ui.shell.select_settlement.rivers.sizes.display}}
+						<input type="radio" name="riverSizeChoice" id="riverNarrow" checked>
+						<label for="riverNarrow">{{i18n giant_map:ui.shell.select_settlement.rivers.sizes.narrow}}</label>
+						<input type="radio" name="riverSizeChoice" id="riverWide">
+						<label for="riverWide">{{i18n giant_map:ui.shell.select_settlement.rivers.sizes.wide}}</label>
+					</div>
+				</div>
+				<div id="lakes" class="option_category">
+					{{i18n giant_map:ui.shell.select_settlement.lakes}}
+					<input type="checkbox" name="lakeChoice" id="lakeChoice" checked>
+					<label for="lakeChoice">{{i18n giant_map:ui.shell.select_settlement.enabled}}</label>
+				</div>
+				<div id="dirt_holes" class="option_category">
+					{{i18n giant_map:ui.shell.select_settlement.dirt_holes}}
+					<input type="checkbox" name="dirtHoleChoice" id="dirtHoleChoice" checked>
+					<label for="dirtHoleChoice">{{i18n giant_map:ui.shell.select_settlement.enabled}}</label>
+				</div>
+				<button id="apply_map_options" class="green" {{action "apply_map_options" target=view}}>{{i18n giant_map:ui.shell.select_settlement.apply_map_options}}</button>
+				<button id="default_map_options" {{action "default_map_options" target=view}}>{{i18n giant_map:ui.shell.select_settlement.default_map_options}}</button>
+				<button id="cancel_map_options" class="red" {{action "cancel_map_options" target=view}}>{{i18n giant_map:ui.shell.select_settlement.cancel_map_options}}</button>
+			</div>
+		</div>
+	</div>
+</script>
