@@ -3,7 +3,6 @@
 		"name" : "Extra Map Options",
 		"namespace" : "giant_map",
 		"version" : 3,
-		"client_only": true,
 		"steam_file_id" : "1385348318"
 	},
 	"default_locale": "en",
