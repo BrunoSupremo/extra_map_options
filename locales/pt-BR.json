@@ -2,10 +2,34 @@
 	"ui": {
 		"shell": {
 			"select_settlement": {
-				"world_size": "Tamanho:",
-				"small": "Pequeno",
-				"normal": "Normal",
-				"large": "Grande"
+				"open_map_options":"Editar Mapa",
+				"world_size": {
+					"display":"Tamanho do Mundo:",
+					"small": "Pequeno",
+					"normal": "Normal",
+					"large": "Grande"
+				},
+				"rivers": {
+					"display":"Rios:",
+					"quantity": "Quantidade Máxima:",
+					"locations": {
+						"display":"Locais:",
+						"plains":"Planices",
+						"foothills":"Pé da montanha",
+						"mountains":"Montanhas"
+					},
+					"sizes": {
+						"display":"Tamanhos:",
+						"narrow":"Estreito",
+						"wide":"Largo"
+					}
+				},
+				"lakes": "Lagos:",
+				"dirt_holes": "Buracos de terra:",
+				"enabled": "Ativos",
+				"apply_map_options": "Aplicar",
+				"default_map_options": "Restaurar",
+				"cancel_map_options": "Cancelar",
 			}
 		}
 	}
