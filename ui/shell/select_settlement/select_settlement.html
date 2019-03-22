@@ -130,6 +130,11 @@
 					<input type="checkbox" name="dirtHoleChoice" id="dirtHoleChoice" checked>
 					<label for="dirtHoleChoice">{{i18n giant_map:ui.shell.select_settlement.enabled}}</label>
 				</div>
+				<div id="sky_lands" class="option_category">
+					{{i18n giant_map:ui.shell.select_settlement.sky_lands}}
+					<input type="checkbox" name="skyLandsChoice" id="skyLandsChoice">
+					<label for="skyLandsChoice">{{i18n giant_map:ui.shell.select_settlement.enabled}}</label>
+				</div>
 				<button id="apply_map_options" class="green" {{action "apply_map_options" target=view}}>{{i18n giant_map:ui.shell.select_settlement.apply_map_options}}</button>
 				<button id="default_map_options" {{action "default_map_options" target=view}}>{{i18n giant_map:ui.shell.select_settlement.default_map_options}}</button>
 				<button id="cancel_map_options" class="red" {{action "cancel_map_options" target=view}}>{{i18n giant_map:ui.shell.select_settlement.cancel_map_options}}</button>

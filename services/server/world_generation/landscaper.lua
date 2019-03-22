@@ -1,7 +1,11 @@
-local Array2D = require 'stonehearth.services.server.world_generation.array_2D'
-local SimplexNoise = require 'stonehearth.lib.math.simplex_noise'
-local FilterFns = require 'stonehearth.services.server.world_generation.filter.filter_fns'
-local PerturbationGrid = require 'stonehearth.services.server.world_generation.perturbation_grid'
+local Point3 = _radiant.csg.Point3
+local Cube3 = _radiant.csg.Cube3
+local Region3 = _radiant.csg.Region3
+local SimplexNoise =		require 'stonehearth.lib.math.simplex_noise'
+local Biome =				require 'stonehearth.services.server.world_generation.biome'
+local Array2D =				require 'stonehearth.services.server.world_generation.array_2D'
+local FilterFns =			require 'stonehearth.services.server.world_generation.filter.filter_fns'
+local PerturbationGrid =	require 'stonehearth.services.server.world_generation.perturbation_grid'
 local water_shallow = 'water_1'
 local water_deep = 'water_2'
 
@@ -11,11 +15,16 @@ local Astar = require 'giant_map.astar'
 local noise_height_map --this noise is to mess with the astar to avoid straight line rivers
 local regions --.size, .start and .ending
 local min_required_region_size = 10
-local log = radiant.log.create_logger('meu_log')
+local log = radiant.log.create_logger('GiantLandscaper')
 
-local world_size = 2
-local lakes = true
-local rivers = {}
+local sky_config = {
+	octaves = 4,
+	persistence_ratio = 0.001,
+	bandlimit = 1.5,
+	mean = 2,
+	range = 16,
+	aspect_ratio = 1
+}
 
 function GiantLandscaper:__init(biome, rng, seed, custom_map_options)
 	self._biome = biome
@@ -38,19 +47,25 @@ function GiantLandscaper:__init(biome, rng, seed, custom_map_options)
 
 	self:_parse_landscape_info()
 
-	world_size = custom_map_options.world_size
-	lakes = custom_map_options.lakes
-	rivers = custom_map_options.rivers
+	self._world_size = custom_map_options.world_size
+	self._lakes = custom_map_options.lakes
+	self._rivers = custom_map_options.rivers
+	self._sky_lands = custom_map_options.sky_lands
+
+	self._extra_map_options_on = true
 end
 
-function GiantLandscaper:mark_water_bodies_original(elevation_map, feature_map)
+function GiantLandscaper:mark_water_bodies(elevation_map, feature_map)
+	if not self._lakes then
+		return
+	end
 	local rng = self._rng
 	local biome = self._biome
 	local config = self._landscape_info.water.noise_map_settings
 	local modifier_map, density_map = self:_get_filter_buffers(feature_map.width, feature_map.height)
 	--fill modifier map to push water bodies away from terrain type boundaries
 	local modifier_fn = function (i,j)
-		if self:_is_flat(elevation_map, i, j, 1) then
+		if self:_is_flat(elevation_map, i, j, 1) and not self:_has_sky_near(feature_map, i, j) then
 			return 0
 		else
 			return -1*config.range
@@ -83,17 +98,13 @@ function GiantLandscaper:mark_water_bodies_original(elevation_map, feature_map)
 	self:_add_deep_water(feature_map)
 end
 
-function GiantLandscaper:mark_water_bodies(elevation_map, feature_map)
-	local rng = self._rng
-	local biome = self._biome
-
-	if lakes then
-		--this is the same as the original mark_water_... function as found in the stonehearth mod
-		self:mark_water_bodies_original(elevation_map,feature_map)
-	end
-	if not rivers then
+function GiantLandscaper:mark_river_bodies(elevation_map, feature_map)
+	if self._rivers.quantity < 1 then
 		return
 	end
+
+	local rng = self._rng
+	local biome = self._biome
 
 	noise_height_map = {}
 	noise_height_map.width = feature_map.width
@@ -113,18 +124,18 @@ function GiantLandscaper:mark_water_bodies(elevation_map, feature_map)
 			noise_height_map[offset].noise = rng:get_int(1,100)
 		end
 	end
-	self:mark_borders() --it is important to avoid generating close to the borders
+	self:mark_borders(feature_map) --it is important to avoid generating close to the borders
 	if self:river_create_regions() then -- try to create and check if regions exist to spawn rivers
 		self:add_rivers(feature_map)
 	end
 end
 
-function GiantLandscaper:mark_borders()
+function GiantLandscaper:mark_borders(feature_map)
 	local function neighbors_have_different_elevations(x,y,offset)
-		if not rivers[noise_height_map[offset].terrain_type] then
+		if not self._rivers[noise_height_map[offset].terrain_type] or self:_has_sky_near(feature_map, x, y, self._rivers.radius) then
 			return true
 		end
-		local radius = rivers.radius
+		local radius = self._rivers.radius
 		for j=y-radius, y+radius do --the border will be 2 tiles thick
 			for i=x-radius, x+radius do
 				local neighbor_offset = (j-1)*noise_height_map.width+i
@@ -144,7 +155,7 @@ function GiantLandscaper:mark_borders()
 			noise_height_map[offset].border = true
 		end
 	end
-	local map_border = world_size*16
+	local map_border = self._world_size*16
 	for y = map_border, noise_height_map.height - (map_border-1) do
 		for x = map_border, noise_height_map.width - (map_border-1) do
 			local offset = (y-1)*noise_height_map.width+x
@@ -292,7 +303,7 @@ function GiantLandscaper:add_rivers(feature_map)
 		return bigest_region
 	end
 
-	local counter = rivers.quantity
+	local counter = self._rivers.quantity
 	while counter >0 do
 		local region = grab_bigest_region()
 		if not region then break end
@@ -300,7 +311,7 @@ function GiantLandscaper:add_rivers(feature_map)
 		local start = regions[region].start
 		local ending = regions[region].ending
 
-		if counter > 0 and rivers[ noise_height_map[start].terrain_type ] then
+		if counter > 0 and self._rivers[ noise_height_map[start].terrain_type ] then
 			self:draw_river(noise_height_map[start], noise_height_map[ending], feature_map)
 			counter = counter -1
 		end
@@ -315,7 +326,7 @@ function GiantLandscaper:draw_river(start,goal,feature_map)
 		log:error('Error. No valid river path found!')
 	else
 		for i, node in ipairs ( path ) do
-			if rivers.radius == 2 then --wide and deep rivers
+			if self._rivers.radius == 2 then --wide and deep rivers
 				feature_map:set(node.x, node.y, water_deep)
 				self:add_shallow_neighbors(node.x, node.y, feature_map)
 			else --narrow and shallow rivers
@@ -337,6 +348,95 @@ function GiantLandscaper:add_shallow_neighbors(x,y, feature_map)
 			end
 		end
 	end
+end
+
+function GiantLandscaper:mark_sky(elevation_map, feature_map, sky_map)
+	if not self._sky_lands then
+		return false
+	end
+	local biome = self._biome
+	for j=1, feature_map.height do
+		for i=1, feature_map.width do
+			local occupied = feature_map:get(i, j) ~= nil
+			if not occupied then
+				local value = SimplexNoise.proportional_simplex_noise(sky_config.octaves,sky_config.persistence_ratio, sky_config.bandlimit,sky_config.mean,sky_config.range,sky_config.aspect_ratio, self._seed,i,j)
+				sky_map:set(i, j, value)
+				if value > 0 then
+					feature_map:set(i, j, "sky")
+				end
+			end
+		end
+	end
+end
+
+function GiantLandscaper:place_sky(tile_region, tile_map, sky_map, tile_offset_x, tile_offset_y)
+	local sky_region = Region3()
+	local rng = self._rng
+
+	if self._sky_lands then
+		sky_map:visit(function(value, i, j)
+			local x, y, w, h = self._perturbation_grid:get_cell_bounds(i, j)
+
+			-- use the center of the cell to get the elevation because the edges may have been detailed
+			local cx, cy = x + math.floor(w*0.5), y + math.floor(h*0.5)
+			local top = tile_map:get(cx, cy)
+
+			if value>0 then
+				top = top+100
+				local cloud_x, cloud_z = self:_to_world_coordinates(x, y, tile_offset_x, tile_offset_y)
+				local cloud = radiant.entities.create_entity("giant_map:decoration:clouds", {ignore_gravity = true})
+				radiant.terrain.place_entity_at_exact_location(cloud, Point3(cloud_x,rng:get_int(0,value*10),cloud_z))
+			else
+				local elevation = tile_map:get(i, j)
+				local terrain_type, step = self._biome:get_terrain_type_and_step(elevation)
+				local mountain_value = -1
+				if terrain_type ~= 'plains' then
+					mountain_value = -2
+				end
+				top = top +( (value-1)*(value-1)*(mountain_value)*5 )
+			end
+
+			local world_x, world_z = self:_to_world_coordinates(x, y, 0, 0)
+			local extra_padding = rng:get_int(1,2)*3
+			local cube = Cube3(
+				Point3(world_x-extra_padding, 0, world_z-extra_padding),
+				Point3(world_x + w +extra_padding, top, world_z + h +extra_padding)
+				)
+			tile_region:subtract_cube(cube)
+
+			sky_region:add_cube(cube)
+		end)
+	end
+
+	sky_region:optimize('place sky')
+
+	return sky_region
+end
+
+function GiantLandscaper:is_sky_feature(feature_name)
+	return feature_name == "sky"
+end
+
+function GiantLandscaper:_has_sky_near(tile_map, x, y, radius)
+	if not self._sky_lands then
+		return false
+	end
+	radius = radius or 1
+	local start_x, start_y = tile_map:bound(x-radius, y-radius)
+	local end_x, end_y = tile_map:bound(x+radius, y+radius)
+	local block_width = end_x - start_x + 1
+	local block_height = end_y - start_y + 1
+	local has_sky_near = false
+
+	tile_map:visit_block(start_x, start_y, block_width, block_height, function(value)
+		if self:is_sky_feature(value) then
+			has_sky_near = true
+			-- return true to terminate iteration
+			return true
+		end
+	end)
+
+	return has_sky_near
 end
 
 return GiantLandscaper

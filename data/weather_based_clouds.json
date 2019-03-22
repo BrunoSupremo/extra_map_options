@@ -1,0 +1,19 @@
+{
+	"stonehearth:weather:blizzard":		"giant_map:effects:blizzard_clouds",
+	"stonehearth:weather:cloudy":		"giant_map:effects:cloudy_clouds",
+	"stonehearth:weather:cloudy:desert":"giant_map:effects:cloudy_clouds",
+	"stonehearth:weather:foggy":		"giant_map:effects:foggy_clouds",
+	"stonehearth:weather:lucky":		"giant_map:effects:lucky_clouds",
+	"stonehearth:weather:lucky:desert":	"giant_map:effects:lucky_clouds",
+	"stonehearth:weather:rain":			"giant_map:effects:rain_clouds",
+	"stonehearth:weather:rain:sunny":	"giant_map:effects:rain_clouds",
+	"stonehearth:weather:sandstorm":	"giant_map:effects:sandstorm_clouds",
+	"stonehearth:weather:sandy":		"giant_map:effects:sandstorm_clouds",
+	"stonehearth:weather:snow":			"giant_map:effects:snow_clouds",
+	"stonehearth:weather:snow:sunny":	"giant_map:effects:snow_clouds",
+	"stonehearth:weather:sunny":		"giant_map:effects:sunny_clouds",
+	"stonehearth:weather:sunny:desert":	"giant_map:effects:sunny_clouds",
+	"stonehearth:weather:thunderstorm":	"giant_map:effects:thunderstorm_clouds",
+	"stonehearth:weather:titanstorm":	"giant_map:effects:titanstorm_clouds",
+	"stonehearth:weather:windy":		"giant_map:effects:windy_clouds"
+}

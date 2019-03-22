@@ -1,0 +1,79 @@
+{
+	"name": "sky_lands_thunderstorm_clouds",
+	"duration": 20000,
+	"material": "materials/cubemitter_bloom.material.json",
+	"loops": true,
+	"emission": {
+		"rate": {
+			"kind": "BURST",
+			"values": [
+				[100, 100,100]
+			]
+		},
+		"angle": {
+			"kind": "CONSTANT",
+			"values": [0]
+		},
+		"origin": {
+			"surface": "CYLINDER",
+			"values": [0, 0, 50, 360]
+		},
+		"translation_x": {
+			"kind": "CONSTANT",
+			"values": [50]
+		},
+		"translation_y": {
+			"kind": "CONSTANT",
+			"values": [50]
+		}
+	},
+	"particle": {
+		"lifetime": {
+			"start": {
+				"kind": "RANDOM_BETWEEN",
+				"values": [900, 1100]
+			}
+		},
+		"speed": {
+			"start": {
+				"kind": "CONSTANT",
+				"values": [0]
+			}
+		},
+		"scale": {
+			"start": {
+				"kind": "CONSTANT",
+				"values": [1]
+			},
+			"over_lifetime": {
+				"kind": "RANDOM_BETWEEN_CURVES",
+				"values": [
+					[
+						[0, 1],
+						[1, 2]
+					],
+					[
+						[0, 1.8],
+						[1, 2.8]
+					]
+				]
+			}
+		},
+		"color": {
+			"start": {
+				"kind": "CONSTANT",
+				"values": [0.5, 0.75, 1, 1]
+			},
+			"over_lifetime_a": {
+				"kind": "CURVE",
+				"values": [
+					[0, 0],
+					[0.4, 0.1],
+					[0.5, 1],
+					[0.6, 0.1],
+					[1, 0]
+				]
+			}
+		}
+	}
+}

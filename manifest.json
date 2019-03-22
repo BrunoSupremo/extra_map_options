@@ -7,9 +7,29 @@
 	},
 	"default_locale": "en",
 	"server_init_script": "file(server)",
+	"aliases":{
+		"data:weather_based_clouds":"file(data/weather_based_clouds.json)",
+		"decoration:clouds":"file(entities/clouds)",
+		"effects:default_clouds":		"file(data/effects/clouds/default_clouds)",
+		"effects:blizzard_clouds":		"file(data/effects/clouds/blizzard_clouds)",
+		"effects:cloudy_clouds":		"file(data/effects/clouds/cloudy_clouds)",
+		"effects:foggy_clouds":			"file(data/effects/clouds/foggy_clouds)",
+		"effects:lucky_clouds":			"file(data/effects/clouds/lucky_clouds)",
+		"effects:rain_clouds":			"file(data/effects/clouds/rain_clouds)",
+		"effects:sandstorm_clouds":		"file(data/effects/clouds/sandstorm_clouds)",
+		"effects:snow_clouds":			"file(data/effects/clouds/snow_clouds)",
+		"effects:sunny_clouds":			"file(data/effects/clouds/sunny_clouds)",
+		"effects:thunderstorm_clouds":	"file(data/effects/clouds/thunderstorm_clouds)",
+		"effects:titanstorm_clouds":	"file(data/effects/clouds/titanstorm_clouds)",
+		"effects:windy_clouds":			"file(data/effects/clouds/windy_clouds)"
+	},
 	"overrides": {
+		"stonehearth/ui/shell/select_settlement/map.js": "file(ui/shell/select_settlement/map.js)",
 		"stonehearth/ui/shell/select_settlement/select_settlement.js":	"file(ui/shell/select_settlement/select_settlement.js)",
 		"stonehearth/ui/shell/select_settlement/select_settlement.html":"file(ui/shell/select_settlement/select_settlement.html)"
+	},
+	"components": {
+		"clouds":"file(components/clouds/clouds.lua)"
 	},
 	"ui":{
 		"less":[

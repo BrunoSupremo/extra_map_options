@@ -332,6 +332,7 @@ App.StonehearthSelectSettlementView = App.View.extend({
 		map_options.rivers.radius = 1;
 		map_options.lakes = true;
 		map_options.dirt_holes = true;
+		map_options.sky_lands = false;
 
 		self.map_options_to_ui();
 
@@ -363,6 +364,7 @@ App.StonehearthSelectSettlementView = App.View.extend({
 		}
 		document.getElementById("lakeChoice").checked = map_options.lakes;
 		document.getElementById("dirtHoleChoice").checked = map_options.dirt_holes;
+		document.getElementById("skyLandsChoice").checked = map_options.sky_lands;
 	},
 	ui_to_map_options: function() {
 		var self = this;
@@ -388,6 +390,7 @@ App.StonehearthSelectSettlementView = App.View.extend({
 		}
 		map_options.lakes = document.getElementById("lakeChoice").checked;
 		map_options.dirt_holes = document.getElementById("dirtHoleChoice").checked;
+		map_options.sky_lands = document.getElementById("skyLandsChoice").checked;
 	},
 
 	actions: {
