@@ -5,6 +5,9 @@
 		"version" : 3,
 		"steam_file_id" : "1385348318"
 	},
+	"dependencies": [
+		"archipelago_biome"
+	],
 	"default_locale": "en",
 	"server_init_script": "file(server)",
 	"aliases":{

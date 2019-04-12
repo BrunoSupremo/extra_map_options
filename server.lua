@@ -1,5 +1,5 @@
 giant_map = {}
-print("Extra Map Options version 19.3.21")
+print("Extra Map Options version 19.4.12")
 
 function giant_map:_on_required_loaded()
 	local game_creation_service = radiant.mods.require('stonehearth.services.server.game_creation.game_creation_service')
