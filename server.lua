@@ -1,7 +1,13 @@
 giant_map = {}
-print("Extra Map Options version 19.4.12")
+print("Extra Map Options version 19.6.23")
 
 function giant_map:_on_required_loaded()
+	for i, mod in ipairs(radiant.resources.get_mod_list()) do
+		if mod == "tower_defense" then
+			return
+		end
+	end
+
 	local game_creation_service = radiant.mods.require('stonehearth.services.server.game_creation.game_creation_service')
 	local custom = require('services.server.game_creation.game_creation_service')
 	radiant.mixin(game_creation_service, custom)
