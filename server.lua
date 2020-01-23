@@ -1,5 +1,5 @@
 giant_map = {}
-print("Extra Map Options version 19.6.23")
+print("Extra Map Options version 20.1.23")
 
 function giant_map:_on_required_loaded()
 	for i, mod in ipairs(radiant.resources.get_mod_list()) do

@@ -20,8 +20,8 @@ local log = radiant.log.create_logger('GiantLandscaper')
 local sky_config = {
 	octaves = 4,
 	persistence_ratio = 0.001,
-	bandlimit = 1.5,
-	mean = 2,
+	bandlimit = 1.75,
+	mean = 1.5,
 	range = 16,
 	aspect_ratio = 1
 }

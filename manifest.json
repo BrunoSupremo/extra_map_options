@@ -30,7 +30,6 @@
 		"tower_defense/data/compatible_mods.json": "file(data/compatible_mods.json)"
 	},
 	"overrides": {
-		"stonehearth/ui/shell/select_settlement/map.js": "file(ui/shell/select_settlement/map.js)",
 		"stonehearth/ui/shell/select_settlement/select_settlement.js":	"file(ui/shell/select_settlement/select_settlement.js)",
 		"stonehearth/ui/shell/select_settlement/select_settlement.html":"file(ui/shell/select_settlement/select_settlement.html)"
 	},
@@ -38,6 +37,9 @@
 		"clouds":"file(components/clouds/clouds.lua)"
 	},
 	"ui":{
+		"js":[
+			"file(ui/shell/select_settlement/map.js)"
+		],
 		"less":[
 			"file(ui/shell/select_settlement/select_settlement.less)"
 		]
