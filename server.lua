@@ -1,7 +1,7 @@
-giant_map = {}
-print("Extra Map Options version 20.1.23")
+extra_map_options = {}
+print("Extra Map Options version 20.2.25")
 
-function giant_map:_on_required_loaded()
+function extra_map_options:_on_required_loaded()
 	for i, mod in ipairs(radiant.resources.get_mod_list()) do
 		if mod == "tower_defense" then
 			return
@@ -11,6 +11,10 @@ function giant_map:_on_required_loaded()
 	local game_creation_service = radiant.mods.require('stonehearth.services.server.game_creation.game_creation_service')
 	local custom = require('services.server.game_creation.game_creation_service')
 	radiant.mixin(game_creation_service, custom)
+
+	local terrain_detailer = radiant.mods.require('stonehearth.services.server.world_generation.terrain_detailer')
+	local custom = require('services.server.world_generation.terrain_detailer')
+	radiant.mixin(terrain_detailer, custom)
 
 	local world_generation_service = radiant.mods.require('stonehearth.services.server.world_generation.world_generation_service')
 	local custom = require('services.server.world_generation.world_generation_service')
@@ -41,6 +45,6 @@ function giant_map:_on_required_loaded()
 	radiant.mixin(qb_to_terrain, custom_qb_to_terrain)
 end
 
-radiant.events.listen_once(radiant, 'radiant:required_loaded', giant_map, giant_map._on_required_loaded)
+radiant.events.listen_once(radiant, 'radiant:required_loaded', extra_map_options, extra_map_options._on_required_loaded)
 
-return giant_map
+return extra_map_options

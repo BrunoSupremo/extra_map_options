@@ -11,7 +11,7 @@ local water_deep = 'water_2'
 
 local GiantLandscaper = class()
 
-local Astar = require 'giant_map.astar'
+local Astar = require 'extra_map_options.astar'
 local noise_height_map --this noise is to mess with the astar to avoid straight line rivers
 local regions --.size, .start and .ending
 local min_required_region_size = 10
@@ -25,8 +25,20 @@ local sky_config = {
 	range = 16,
 	aspect_ratio = 1
 }
+local water_config = {
+	octaves = 2,
+	persistence_ratio = 0.1,
+	bandlimit = 2,
+	mean = {
+		plains = 5,
+		foothills = -100,
+		mountains = -100
+	},
+	range = 10,
+	aspect_ratio = 1
+}
 
-function GiantLandscaper:__init(biome, rng, seed, custom_map_options)
+function GiantLandscaper:__init(biome, rng, seed)
 	self._biome = biome
 	self._tile_width = self._biome:get_tile_size()
 	self._tile_height = self._biome:get_tile_size()
@@ -47,21 +59,27 @@ function GiantLandscaper:__init(biome, rng, seed, custom_map_options)
 
 	self:_parse_landscape_info()
 
+	local custom_map_options = stonehearth.game_creation:get_extra_map_options()
+
 	self._world_size = custom_map_options.world_size
 	self._lakes = custom_map_options.lakes
 	self._rivers = custom_map_options.rivers
-	self._sky_lands = custom_map_options.sky_lands
+	self._sky_lands = custom_map_options.modes.sky_lands
+	self._waterworld = custom_map_options.modes.waterworld
 
 	self._extra_map_options_on = true
 end
 
 function GiantLandscaper:mark_water_bodies(elevation_map, feature_map)
-	if not self._lakes then
+	if not self._lakes and not self._waterworld then
 		return
 	end
 	local rng = self._rng
 	local biome = self._biome
 	local config = self._landscape_info.water.noise_map_settings
+	if self._waterworld then
+		config = water_config
+	end
 	local modifier_map, density_map = self:_get_filter_buffers(feature_map.width, feature_map.height)
 	--fill modifier map to push water bodies away from terrain type boundaries
 	local modifier_fn = function (i,j)
@@ -87,7 +105,15 @@ function GiantLandscaper:mark_water_bodies(elevation_map, feature_map)
 				if value > 0 then
 					local old_value = feature_map:get(i, j)
 					old_feature_map:set(i, j, old_value)
-					feature_map:set(i, j, water_shallow)
+
+					if self._waterworld then
+						local islands_value = SimplexNoise.proportional_simplex_noise(config.octaves,config.persistence_ratio, config.bandlimit,config.mean[terrain_type],config.range,config.aspect_ratio, self._seed,i,j)
+						if islands_value <= config.range-1 then
+							feature_map:set(i, j, water_shallow)
+						end
+					else
+						feature_map:set(i, j, water_shallow)
+					end
 				end
 			end
 		end
@@ -383,9 +409,6 @@ function GiantLandscaper:place_sky(tile_region, tile_map, sky_map, tile_offset_x
 
 			if value>0 then
 				top = top+100
-				local cloud_x, cloud_z = self:_to_world_coordinates(x, y, tile_offset_x, tile_offset_y)
-				local cloud = radiant.entities.create_entity("giant_map:decoration:clouds", {ignore_gravity = true})
-				radiant.terrain.place_entity_at_exact_location(cloud, Point3(cloud_x,rng:get_int(0,value*10),cloud_z))
 			else
 				local elevation = tile_map:get(i, j)
 				local terrain_type, step = self._biome:get_terrain_type_and_step(elevation)
@@ -422,6 +445,9 @@ function GiantLandscaper:_has_sky_near(tile_map, x, y, radius)
 		return false
 	end
 	radius = radius or 1
+	if self._waterworld then
+		radius = 3
+	end
 	local start_x, start_y = tile_map:bound(x-radius, y-radius)
 	local end_x, end_y = tile_map:bound(x+radius, y+radius)
 	local block_width = end_x - start_x + 1

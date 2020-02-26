@@ -14,43 +14,42 @@
 		color: #f5eed6;
 		display: none;
 		position: absolute;
-		top: 200px;
+		top: 100px;
 		left: 200px;
 		text-align: center;
 
+		div:not(.title){
+			.borderImageBackground;
+			background-clip: padding-box;
+			border-width: 9px 9px 13px 9px;
+			border-image: url(/stonehearth/ui/root/css/images/gui/panel.png) 9 9 13 9 repeat;
+			border-style: solid;
+			background-image: url(/stonehearth/ui/root/css/images/gui/panel.png);
+			padding: 10px;
+			margin: 0px;
+			text-align: left;
+		}
+		.title, #special_modes{
+			margin-bottom: 10px;
+		}
+		p{
+			margin: 0;
+		}
 		label{
 			font-family: @headerFontFamily;
 			font-size: 20px;
-		}
-		label:first-of-type{
 			margin-left: 1em;
-		}
-
-		.option_category{margin: 1em 0;}
-
-		span{display: block;}
-
-		#rivers{margin-top: -0.5em;}
-		#rivers > :first-of-type{margin-top: 0.5em;}
-		#rivers > :last-of-type{margin: 0;}
-
-		.title{
-			text-align: center;
-			font-size: 25px;
 		}
 
 		#quantity{
 			top: 0;
-			border: 1px solid;
+			border: 5px solid #100;
 			padding: 2px;
 			height: auto;
 			font-size: 25px;
 			background: rgba(0,0,0,0.5);
 			color: #fff;
-			margin-left: 1em;
+			margin-bottom: .5em;
 		}
-	}
-	#map_options > *{
-		text-align: left;
 	}
 }

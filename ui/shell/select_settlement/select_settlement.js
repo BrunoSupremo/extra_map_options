@@ -6,7 +6,8 @@ App.StonehearthSelectSettlementView = App.View.extend({
 
 	options: {},
 	analytics: {},
-	map_options: {},
+	map_options_table: {},
+	map_options_table_default: {},
 
 	init: function() {
 		this._super();
@@ -23,25 +24,35 @@ App.StonehearthSelectSettlementView = App.View.extend({
 		self.$('#selectSettlement').addClass(kingdom_uri);
 		self.$('.bullet').addClass(biome_uri);
 
-		self.reset_map_options(true);
+		$.get('/extra_map_options/data/extra_map_options.json')
+		.done(function (result) {
+			let current = result.biome_options["default"];
+			let biome = result.biome_options[biome_uri];
 
-		self._newGame(self._generate_seed(), function (e) {
-			radiant.call('radiant:play_sound', {'track' : 'stonehearth:sounds:ui:start_menu:paper_menu'} );
-			self.$('#map').stonehearthMap({
-				mapGrid: e.map,
-				mapInfo: e.map_info,
+			$.extend( true, current, biome );
+			self.map_options_table = JSON.parse(JSON.stringify(current));
+			self.map_options_table_default = JSON.parse(JSON.stringify(current));
 
-				click: function(cellX, cellY) {
-					self._chooseLocation(cellX, cellY);
-				},
+			self.map_options_to_ui();
 
-				hover: function(cellX, cellY) {
-					var map = $('#map').stonehearthMap('getMap');
-					var cell = map[cellY] && map[cellY][cellX];
-					if (cell) {
-						self._updateScroll(cell);
+			self._newGame(self._generate_seed(), function (e) {
+				radiant.call('radiant:play_sound', {'track' : 'stonehearth:sounds:ui:start_menu:paper_menu'} );
+				self.$('#map').stonehearthMap({
+					mapGrid: e.map,
+					mapInfo: e.map_info,
+
+					click: function(cellX, cellY) {
+						self._chooseLocation(cellX, cellY);
+					},
+
+					hover: function(cellX, cellY) {
+						var map = $('#map').stonehearthMap('getMap');
+						var cell = map[cellY] && map[cellY][cellX];
+						if (cell) {
+							self._updateScroll(cell);
+						}
 					}
-				}
+				});
 			});
 		});
 
@@ -123,7 +134,7 @@ App.StonehearthSelectSettlementView = App.View.extend({
 						self.$('[data-season-id] input').first().attr('checked', true);
 					}
 				});
-			})
+			});
 		}
 	}.observes('options.biome_src'),
 
@@ -183,12 +194,12 @@ App.StonehearthSelectSettlementView = App.View.extend({
 			my: 'left+' + 12 * cellX + ' top+' + 12 * cellY,
 			at: 'left top',
 			of: self.$('#map'),
-		})
+		});
 
 		var tipContent = '<div id="selectSettlementTooltip">';
 		tipContent += '<button id="selectSettlementButton" class="flat">' + i18n.t('stonehearth:ui.shell.select_settlement.settle_at_this_location') + '</button><br>';
 		tipContent += '<button id="clearSelectionButton" class="flat">' + i18n.t('stonehearth:ui.shell.select_settlement.clear_selection') + '</button>';
-		tipContent += '</div>'
+		tipContent += '</div>';
 
 		self.$('#selectSettlementPin').tooltipster({
 			autoClose: false,
@@ -207,11 +218,11 @@ App.StonehearthSelectSettlementView = App.View.extend({
 		self.$('#worldSeedInput').attr('disabled', 'disabled');
 		self.$('#open_map_options').attr('disabled', 'disabled');
 
-		radiant.call_obj('stonehearth.game_creation', 'new_game_command', 12, 8, seed, self.options, self.analytics, map_options)
+		radiant.call_obj('stonehearth.game_creation', 'new_game_command', 12, 8, seed, self.options, self.analytics, self.map_options_table)
 		.done(function(e) {
 			self._map_info = e.map_info;
 			fn(e);
-			self.$('#map').stonehearthMap('option','settlementRadius', map_options.world_size*9+1);
+			self.$('#map').stonehearthMap('option','settlementRadius', self.map_options_table.world_size*9+1);
 		})
 		.fail(function(e) {
 			console.error('new_game failed:', e);
@@ -246,10 +257,10 @@ App.StonehearthSelectSettlementView = App.View.extend({
 
 			vegetationDescription = cell.vegetation_density;
 			wildlifeDescription = cell.wildlife_density;
-			mineralDescription = cell.mineral_density;
+			// mineralDescription = cell.mineral_density;
 
 			if (cell.terrain_code != this._prevTerrainCode) {
-				var portrait = 'url(/stonehearth/ui/shell/select_settlement/images/' + cell.terrain_code + '.png)';
+				// var portrait = 'url(/stonehearth/ui/shell/select_settlement/images/' + cell.terrain_code + '.png)';
 				self.$('#terrainType').html(terrainType);
 				this._prevTerrainCode = cell.terrain_code;
 			}
@@ -290,7 +301,7 @@ App.StonehearthSelectSettlementView = App.View.extend({
 	},
 
 	_clearSelectionKeyHandler: function(e) {
-		var self = this;
+		// var self = this;
 
 		var escape_key_code = 27;
 
@@ -319,78 +330,69 @@ App.StonehearthSelectSettlementView = App.View.extend({
 		self.destroy();
 	},
 
-	reset_map_options: function(first_use) {
+	reset_map_options: function() {
 		var self = this;
-		var map_options_clone = JSON.parse(JSON.stringify(map_options));
+		let map_options_copy = JSON.parse(JSON.stringify(self.map_options_table));
 
-		map_options.world_size = 2;
-		map_options.rivers = {};
-		map_options.rivers.quantity = 0;
-		map_options.rivers.plains = true;
-		map_options.rivers.foothills = true;
-		map_options.rivers.mountains = true;
-		map_options.rivers.radius = 1;
-		map_options.lakes = true;
-		map_options.dirt_holes = true;
-		map_options.sky_lands = false;
-
+		self.map_options_table = self.map_options_table_default;
 		self.map_options_to_ui();
 
-		if (!first_use){
-			//at the first call, the clone would start empty and end erasing the options table
-			map_options = JSON.parse(JSON.stringify(map_options_clone));
-		}
+		self.map_options_table = JSON.parse(JSON.stringify(map_options_copy));
 	},
 	map_options_to_ui: function() {
 		var self = this;
-		if (map_options.world_size == 1) {
+		if (self.map_options_table.world_size == 1) {
 			document.getElementById("size1").checked = true;
 		}
-		if (map_options.world_size == 2) {
+		if (self.map_options_table.world_size == 2) {
 			document.getElementById("size2").checked = true;
 		}
-		if (map_options.world_size == 4) {
+		if (self.map_options_table.world_size == 4) {
 			document.getElementById("size4").checked = true;
 		}
-		document.getElementById("quantity").value = map_options.rivers.quantity;
-		document.getElementById("riverPlains").checked = map_options.rivers.plains;
-		document.getElementById("riverFoothills").checked = map_options.rivers.foothills;
-		document.getElementById("riverMountains").checked = map_options.rivers.mountains;
-		if (map_options.rivers.radius == 1) {
+		document.getElementById("quantity").value = self.map_options_table.rivers.quantity;
+		document.getElementById("riverPlains").checked = self.map_options_table.rivers.plains;
+		document.getElementById("riverFoothills").checked = self.map_options_table.rivers.foothills;
+		document.getElementById("riverMountains").checked = self.map_options_table.rivers.mountains;
+		if (self.map_options_table.rivers.radius == 2) {
+			document.getElementById("riverWide").checked = true;
+		}else{
 			document.getElementById("riverNarrow").checked = true;
 		}
-		if (map_options.rivers.radius == 2) {
-			document.getElementById("riverWide").checked = true;
-		}
-		document.getElementById("lakeChoice").checked = map_options.lakes;
-		document.getElementById("dirtHoleChoice").checked = map_options.dirt_holes;
-		document.getElementById("skyLandsChoice").checked = map_options.sky_lands;
+		document.getElementById("lakeChoice").checked = self.map_options_table.lakes;
+		document.getElementById("dirtHoleChoice").checked = self.map_options_table.dirt_holes;
+		document.getElementById("superFlatChoice").checked = self.map_options_table.modes.superflat;
+		document.getElementById("waterWorldChoice").checked = self.map_options_table.modes.waterworld;
+		document.getElementById("canyonsChoice").checked = self.map_options_table.modes.canyons;
+		document.getElementById("skyLandsChoice").checked = self.map_options_table.modes.sky_lands;
 	},
 	ui_to_map_options: function() {
 		var self = this;
 
 		if (document.getElementById("size1").checked){
-			map_options.world_size = 1;
+			self.map_options_table.world_size = 1;
 		}
 		if (document.getElementById("size2").checked){
-			map_options.world_size = 2;
+			self.map_options_table.world_size = 2;
 		}
 		if (document.getElementById("size4").checked){
-			map_options.world_size = 4;
+			self.map_options_table.world_size = 4;
 		}
-		map_options.rivers.quantity = parseInt(document.getElementById("quantity").value);
-		map_options.rivers.plains = document.getElementById("riverPlains").checked;
-		map_options.rivers.foothills = document.getElementById("riverFoothills").checked;
-		map_options.rivers.mountains = document.getElementById("riverMountains").checked;
-		if (document.getElementById("riverNarrow").checked) {
-			 map_options.rivers.radius = 1;
-		}
+		self.map_options_table.rivers.quantity = parseInt(document.getElementById("quantity").value);
+		self.map_options_table.rivers.plains = document.getElementById("riverPlains").checked;
+		self.map_options_table.rivers.foothills = document.getElementById("riverFoothills").checked;
+		self.map_options_table.rivers.mountains = document.getElementById("riverMountains").checked;
 		if (document.getElementById("riverWide").checked) {
-			 map_options.rivers.radius = 2;
+			self.map_options_table.rivers.radius = 2;
+		}else{
+			self.map_options_table.rivers.radius = 1;
 		}
-		map_options.lakes = document.getElementById("lakeChoice").checked;
-		map_options.dirt_holes = document.getElementById("dirtHoleChoice").checked;
-		map_options.sky_lands = document.getElementById("skyLandsChoice").checked;
+		self.map_options_table.lakes = document.getElementById("lakeChoice").checked;
+		self.map_options_table.dirt_holes = document.getElementById("dirtHoleChoice").checked;
+		self.map_options_table.modes.superflat = document.getElementById("superFlatChoice").checked;
+		self.map_options_table.modes.waterworld = document.getElementById("waterWorldChoice").checked;
+		self.map_options_table.modes.canyons = document.getElementById("canyonsChoice").checked;
+		self.map_options_table.modes.sky_lands = document.getElementById("skyLandsChoice").checked;
 	},
 
 	actions: {

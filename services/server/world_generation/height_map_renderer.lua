@@ -10,18 +10,24 @@ local HeightMapCPP = _radiant.csg.HeightMap
 local Sky_Lands_HeightMapRenderer = class()
 
 function Sky_Lands_HeightMapRenderer:render_height_map_to_region(region3, height_map, underground_height_map)
-   assert(height_map.width == self._tile_size)
-   assert(height_map.height == self._tile_size)
-   assert(underground_height_map.width == self._tile_size)
-   assert(underground_height_map.height == self._tile_size)
+	assert(height_map.width == self._tile_size)
+	assert(height_map.height == self._tile_size)
+	assert(underground_height_map.width == self._tile_size)
+	assert(underground_height_map.height == self._tile_size)
 
-   local surface_region = self:_convert_height_map_to_region3(height_map, self._add_land_to_region)
-   region3:add_region(surface_region)
+	local surface_region = self:_convert_height_map_to_region3(height_map, self._add_land_to_region)
+	region3:add_region(surface_region)
 
-   local underground_region = self:_convert_height_map_to_region3(underground_height_map, self._add_mountains_to_region)
-   region3:add_region(underground_region)
+	local underground_region = self:_convert_height_map_to_region3(underground_height_map, self._add_mountains_to_region)
+	region3:add_region(underground_region)
 
-   region3:optimize('Sky_Lands_heightmaprenderer:render_height_map_to_region()')
+	local custom_map_options = stonehearth.game_creation:get_extra_map_options()
+	if not custom_map_options.modes.sky_lands then
+		local bedrock_region = self:_get_bedrock_region(height_map, 4)
+		region3:add_region(bedrock_region)
+	end
+
+	region3:optimize('Sky_Lands_heightmaprenderer:render_height_map_to_region()')
 end
 
 return Sky_Lands_HeightMapRenderer

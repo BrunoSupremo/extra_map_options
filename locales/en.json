@@ -9,25 +9,33 @@
 					"normal": "Normal",
 					"large": "Large"
 				},
+				"enable": {
+					"display":"Enable:",
+					"lakes": "Lakes",
+					"dirt_holes": "Dirt Holes"
+				},
 				"rivers": {
 					"display":"Rivers:",
 					"quantity": "Max quantity:",
+					"sizes": {
+						"display":"Sizes:",
+						"narrow":"Narrow",
+						"wide":"Wide"
+					},
 					"locations": {
 						"display":"Locations:",
 						"plains":"Plains",
 						"foothills":"Foothills",
 						"mountains":"Mountains"
-					},
-					"sizes": {
-						"display":"Sizes:",
-						"narrow":"Narrow",
-						"wide":"Wide"
 					}
 				},
-				"lakes": "Lakes:",
-				"dirt_holes": "Dirt Holes:",
-				"sky_lands": "Sky Lands:",
-				"enabled": "Enabled",
+				"modes": {
+					"display":"Special Modes:",
+					"superflat": "Super Flat",
+					"waterworld": "WaterWorld",
+					"canyons": "Canyons",
+					"sky_lands": "Sky Lands"
+				},
 				"apply_map_options": "Apply",
 				"default_map_options": "Defaults",
 				"cancel_map_options": "Cancel",

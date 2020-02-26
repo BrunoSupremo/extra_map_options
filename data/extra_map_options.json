@@ -1,0 +1,43 @@
+{
+	"biome_options": {
+		"default": {
+			"_guide_for_modders":"add your biome here from your manifest",
+			"_you_just_need_to":"declare the fields that are different from default",
+			"_check_biomes_below":"for simple examples",
+
+			"world_size":2,
+			"rivers":{
+				"quantity":0,
+				"radius":1,
+				"plains":true,
+				"foothills":true,
+				"mountains":true
+			},
+			"lakes":true,
+			"dirt_holes":true,
+			"modes":{
+				"sky_lands":false,
+				"waterworld":false,
+				"superflat":false,
+				"canyons":false
+			}
+		},
+		"stonehearth:biome:temperate": {
+			"rivers":{
+				"quantity":1,
+				"radius":2
+			}
+		},
+		"stonehearth:biome:desert": {
+			"rivers":{
+				"quantity":1
+			}
+		},
+		"stonehearth:biome:arctic": {
+			"rivers":{
+				"quantity":1,
+				"radius":2
+			}
+		}
+	}
+}
