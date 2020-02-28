@@ -17,10 +17,13 @@ function ExtraMapMicroMapGenerator:generate_noise_map(size_x, size_y)
 	if extras.modes.canyons then
 		height_multipler = 10
 		--noise_config is avgered with the canyons values, (this+canyons*2) /3
-		noise_config.octaves = (noise_config.octaves + 4) /3
-		noise_config.persistence_ratio = (noise_config.persistence_ratio + 0.2) /3
-		noise_config.bandlimit = (noise_config.bandlimit + 5) /3
-		noise_config.aspect_ratio = (noise_config.aspect_ratio + 2) /3
+		--noise_config_temp is necessary to avoid overwriting the original table
+		local noise_config_temp = {}
+		noise_config_temp.octaves = (noise_config.octaves + 4) /3
+		noise_config_temp.persistence_ratio = (noise_config.persistence_ratio + 0.2) /3
+		noise_config_temp.bandlimit = (noise_config.bandlimit + 5) /3
+		noise_config_temp.aspect_ratio = (noise_config.aspect_ratio + 2) /3
+		noise_config = noise_config_temp
 	end
 	local fn = function (x,y)
 		local mean = mountains_info.height_base

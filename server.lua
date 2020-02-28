@@ -1,5 +1,5 @@
 extra_map_options = {}
-print("Extra Map Options version 20.2.27")
+print("Extra Map Options version 20.2.28")
 
 function extra_map_options:_on_required_loaded()
 	for i, mod in ipairs(radiant.resources.get_mod_list()) do
