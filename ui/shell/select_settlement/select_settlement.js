@@ -26,13 +26,15 @@ App.StonehearthSelectSettlementView = App.View.extend({
 
 		$.get('/extra_map_options/data/extra_map_options.json')
 		.done(function (result) {
+			//grabs defaults and biome specific values
 			let current = result.biome_options["default"];
 			let biome = result.biome_options[biome_uri];
-
+			//overwrite defaults with biome specifics
 			$.extend( true, current, biome );
 			self.map_options_table = JSON.parse(JSON.stringify(current));
 			self.map_options_table_default = JSON.parse(JSON.stringify(current));
 
+			self.hide_ui_parts();
 			self.map_options_to_ui();
 
 			self._newGame(self._generate_seed(), function (e) {
@@ -330,6 +332,71 @@ App.StonehearthSelectSettlementView = App.View.extend({
 		self.destroy();
 	},
 
+	hide_ui_parts: function() {
+		var self = this;
+		if(self.map_options_table.hide_from_ui.world_size){
+			document.getElementById("world_size").style.display = "none";
+		}
+		if (self.map_options_table.hide_from_ui.lakes && self.map_options_table.hide_from_ui.dirt_holes){
+			document.getElementById("enable").style.display = "none";
+		}else{
+			if (self.map_options_table.hide_from_ui.lakes){
+				document.getElementById("lakeChoice").style.display = "none";
+				document.querySelector("#lakeChoice + label").style.display = "none";
+			}
+			if (self.map_options_table.hide_from_ui.dirt_holes){
+				document.getElementById("dirtHoleChoice").style.display = "none";
+				document.querySelector("#dirtHoleChoice + label").style.display = "none";
+			}
+		}
+		if(self.map_options_table.hide_from_ui.rivers.quantity && self.map_options_table.hide_from_ui.rivers.plains && self.map_options_table.hide_from_ui.rivers.foothills && self.map_options_table.hide_from_ui.rivers.mountains && self.map_options_table.hide_from_ui.rivers.radius ){
+			document.getElementById("rivers").style.display = "none";
+		}else{
+			if(self.map_options_table.hide_from_ui.rivers.quantity){
+				document.getElementById("quantity").style.display = "none";
+				document.getElementById("quantity_label").style.display = "none";
+			}
+			if(self.map_options_table.hide_from_ui.rivers.plains && self.map_options_table.hide_from_ui.rivers.foothills && self.map_options_table.hide_from_ui.rivers.mountains ){
+				document.getElementById("locations").style.display = "none";
+			}else{
+				if(self.map_options_table.hide_from_ui.rivers.plains){
+					document.getElementById("riverPlains").style.display = "none";
+					document.querySelector("#riverPlains + label").style.display = "none";
+				}
+				if(self.map_options_table.hide_from_ui.rivers.foothills){
+					document.getElementById("riverFoothills").style.display = "none";
+					document.querySelector("#riverFoothills + label").style.display = "none";
+				}
+				if(self.map_options_table.hide_from_ui.rivers.mountains){
+					document.getElementById("riverMountains").style.display = "none";
+					document.querySelector("#riverMountains + label").style.display = "none";
+				}
+			}
+			if(self.map_options_table.hide_from_ui.rivers.radius){
+				document.getElementById("sizes").style.display = "none";
+			}
+		}
+		if(self.map_options_table.hide_from_ui.modes.superflat && self.map_options_table.hide_from_ui.modes.waterworld && self.map_options_table.hide_from_ui.modes.canyons && self.map_options_table.hide_from_ui.modes.sky_lands ){
+			document.getElementById("special_modes").style.display = "none";
+		}else{
+			if(self.map_options_table.hide_from_ui.modes.superflat){
+				document.getElementById("superFlatChoice").style.display = "none";
+				document.querySelector("#superFlatChoice + label").style.display = "none";
+			}
+			if(self.map_options_table.hide_from_ui.modes.waterworld){
+				document.getElementById("waterWorldChoice").style.display = "none";
+				document.querySelector("#waterWorldChoice + label").style.display = "none";
+			}
+			if(self.map_options_table.hide_from_ui.modes.canyons){
+				document.getElementById("canyonsChoice").style.display = "none";
+				document.querySelector("#canyonsChoice + label").style.display = "none";
+			}
+			if(self.map_options_table.hide_from_ui.modes.sky_lands){
+				document.getElementById("skyLandsChoice").style.display = "none";
+				document.querySelector("#skyLandsChoice + label").style.display = "none";
+			}
+		}
+	},
 	reset_map_options: function() {
 		var self = this;
 		let map_options_copy = JSON.parse(JSON.stringify(self.map_options_table));

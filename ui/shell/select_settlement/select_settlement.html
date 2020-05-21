@@ -88,7 +88,7 @@
 		<div id="i_hate_wrappers" class="gui">
 			<div id="map_options" class="window">
 				<div class="title">{{i18n extra_map_options:ui.shell.select_settlement.open_map_options}}</div>
-				<div>
+				<div id="world_size">
 					<p>{{i18n extra_map_options:ui.shell.select_settlement.world_size.display}}</p>
 					<input type="radio" name="worldSizeChoice" id="size1">
 					<label for="size1">{{i18n extra_map_options:ui.shell.select_settlement.world_size.small}}</label>
@@ -97,25 +97,25 @@
 					<input type="radio" name="worldSizeChoice" id="size4">
 					<label for="size4">{{i18n extra_map_options:ui.shell.select_settlement.world_size.large}}</label>
 				</div>
-				<div>
+				<div id="enable">
 					<p>{{i18n extra_map_options:ui.shell.select_settlement.enable.display}}</p>
 					<input type="checkbox" name="lakeChoice" id="lakeChoice" checked>
 					<label for="lakeChoice">{{i18n extra_map_options:ui.shell.select_settlement.enable.lakes}}</label>
 					<input type="checkbox" name="dirtHoleChoice" id="dirtHoleChoice" checked>
 					<label for="dirtHoleChoice">{{i18n extra_map_options:ui.shell.select_settlement.enable.dirt_holes}}</label>
 				</div>
-				<div>
+				<div id="rivers">
 					<p>{{i18n extra_map_options:ui.shell.select_settlement.rivers.display}}</p>
-					<label>{{i18n extra_map_options:ui.shell.select_settlement.rivers.quantity}}</label>
+					<label id="quantity_label">{{i18n extra_map_options:ui.shell.select_settlement.rivers.quantity}}</label>
 					<input type="number" id="quantity" name="quantity" min="0" value="0" title="{{i18n stonehearth:ui.game.common.input_text_tooltip}}">
-					<div>
+					<div id="sizes">
 						<p>{{i18n extra_map_options:ui.shell.select_settlement.rivers.sizes.display}}</p>
 						<input type="radio" name="riverSizeChoice" id="riverNarrow" checked>
 						<label for="riverNarrow">{{i18n extra_map_options:ui.shell.select_settlement.rivers.sizes.narrow}}</label>
 						<input type="radio" name="riverSizeChoice" id="riverWide">
 						<label for="riverWide">{{i18n extra_map_options:ui.shell.select_settlement.rivers.sizes.wide}}</label>
 					</div>
-					<div>
+					<div id="locations">
 						<p>{{i18n extra_map_options:ui.shell.select_settlement.rivers.locations.display}}</p>
 						<input type="checkbox" name="riverPlains" id="riverPlains" checked>
 						<label for="riverPlains">{{i18n extra_map_options:ui.shell.select_settlement.rivers.locations.plains}}</label>
