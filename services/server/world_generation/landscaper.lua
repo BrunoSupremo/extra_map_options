@@ -125,7 +125,7 @@ function GiantLandscaper:mark_water_bodies(elevation_map, feature_map)
 end
 
 function GiantLandscaper:mark_river_bodies(elevation_map, feature_map)
-	if self._rivers.quantity < 1 then
+	if not self._rivers.quantity or self._rivers.quantity < 1 then
 		return
 	end
 
