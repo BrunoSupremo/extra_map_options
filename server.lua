@@ -1,5 +1,7 @@
 extra_map_options = {}
-print("Extra Map Options version 20.8.29")
+print("Extra Map Options version 21.1.3")
+
+-- try to add caves generation
 
 function extra_map_options:_on_required_loaded()
 	for i, mod in ipairs(radiant.resources.get_mod_list()) do

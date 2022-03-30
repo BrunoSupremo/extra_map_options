@@ -57,6 +57,12 @@
 				"quantity":1,
 				"radius":2
 			}
+		},
+		"stonehearth_ace:biome:highlands": {
+			"rivers":{
+				"quantity":4,
+				"mountains":false
+			}
 		}
 	}
 }
