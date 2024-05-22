@@ -1,5 +1,5 @@
 extra_map_options = {}
-print("Extra Map Options version 21.1.3")
+print("Extra Map Options version 24.5.22")
 
 -- try to add caves generation
 
@@ -13,6 +13,10 @@ function extra_map_options:_on_required_loaded()
 	local game_creation_service = radiant.mods.require('stonehearth.services.server.game_creation.game_creation_service')
 	local custom = require('services.server.game_creation.game_creation_service')
 	radiant.mixin(game_creation_service, custom)
+
+	local scenario_index = radiant.mods.require('stonehearth.services.server.world_generation.scenario_index')
+	local custom = require('services.server.world_generation.scenario_index')
+	radiant.mixin(scenario_index, custom)
 
 	local terrain_detailer = radiant.mods.require('stonehearth.services.server.world_generation.terrain_detailer')
 	local custom = require('services.server.world_generation.terrain_detailer')

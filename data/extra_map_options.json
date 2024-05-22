@@ -15,6 +15,7 @@
 			},
 			"lakes":true,
 			"dirt_holes":true,
+			"landmarks":1,
 			"modes":{
 				"sky_lands":false,
 				"waterworld":false,
@@ -33,6 +34,7 @@
 				},
 				"lakes":false,
 				"dirt_holes":false,
+				"landmarks":false,
 				"modes":{
 					"sky_lands":false,
 					"waterworld":false,

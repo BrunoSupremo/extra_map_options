@@ -14,6 +14,12 @@
 					"lakes": "Lakes",
 					"dirt_holes": "Dirt Holes"
 				},
+				"landmarks": {
+					"display":"Landmarks:",
+					"none": "None",
+					"default": "Default",
+					"plenty": "Plenty"
+				},
 				"rivers": {
 					"display":"Rivers:",
 					"quantity": "Max quantity:",

@@ -14,6 +14,12 @@
 					"lakes": "Lagos",
 					"dirt_holes": "Buracos de terra"
 				},
+				"landmarks": {
+					"display":"Marcos:",
+					"none": "Nenhum",
+					"default": "Padrão",
+					"plenty": "Bastante"
+				},
 				"rivers": {
 					"display":"Rios:",
 					"quantity": "Quantidade Máxima:",

@@ -111,6 +111,8 @@ App.StonehearthSelectSettlementView = App.View.extend({
 		$(document).on('keydown', this._clearSelectionKeyHandler);
 
 		self._animateLoading();
+
+		self.$('#map_options').draggable();
 	},
 
 	_loadSeasons: function () {
@@ -349,6 +351,9 @@ App.StonehearthSelectSettlementView = App.View.extend({
 				document.querySelector("#dirtHoleChoice + label").style.display = "none";
 			}
 		}
+		if(self.map_options_table.hide_from_ui.landmarks){
+			document.getElementById("landmarks").style.display = "none";
+		}
 		if(self.map_options_table.hide_from_ui.rivers.quantity && self.map_options_table.hide_from_ui.rivers.plains && self.map_options_table.hide_from_ui.rivers.foothills && self.map_options_table.hide_from_ui.rivers.mountains && self.map_options_table.hide_from_ui.rivers.radius ){
 			document.getElementById("rivers").style.display = "none";
 		}else{
@@ -417,6 +422,15 @@ App.StonehearthSelectSettlementView = App.View.extend({
 		if (self.map_options_table.world_size == 4) {
 			document.getElementById("size4").checked = true;
 		}
+		if (self.map_options_table.landmarks == 0) {
+			document.getElementById("amount0").checked = true;
+		}
+		if (self.map_options_table.landmarks == 1) {
+			document.getElementById("amount1").checked = true;
+		}
+		if (self.map_options_table.landmarks == 2) {
+			document.getElementById("amount2").checked = true;
+		}
 		document.getElementById("quantity").value = self.map_options_table.rivers.quantity;
 		document.getElementById("riverPlains").checked = self.map_options_table.rivers.plains;
 		document.getElementById("riverFoothills").checked = self.map_options_table.rivers.foothills;
@@ -444,6 +458,15 @@ App.StonehearthSelectSettlementView = App.View.extend({
 		}
 		if (document.getElementById("size4").checked){
 			self.map_options_table.world_size = 4;
+		}
+		if (document.getElementById("amount0").checked){
+			self.map_options_table.landmarks = 0;
+		}
+		if (document.getElementById("amount1").checked){
+			self.map_options_table.landmarks = 1;
+		}
+		if (document.getElementById("amount2").checked){
+			self.map_options_table.landmarks = 2;
 		}
 		self.map_options_table.rivers.quantity = parseInt(document.getElementById("quantity").value);
 		self.map_options_table.rivers.plains = document.getElementById("riverPlains").checked;
