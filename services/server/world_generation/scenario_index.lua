@@ -20,7 +20,8 @@ function ExtraMapScenarioIndex:_parse_scenario_index(json)
 			if landmarks == 0 then
 				multiplier = 0
 			end
-			if landmarks == 2 then
+			if landmarks == 2 and (string.find(name, "water") == nil) then
+				--ignore multiplier for water features
 				multiplier = 10
 			end
 		end
@@ -31,12 +32,12 @@ function ExtraMapScenarioIndex:_parse_scenario_index(json)
 		end
 
 		if category.max_count then
-			-- if a list (and so far they all are),
+			-- if it is a list (and so far they all are),
 			if type(category.max_count) == 'table' then
 				-- avg the lowest and highest indexes, use that instead
 				category.max_count = (category.max_count[1] + category.max_count[#category.max_count]) / 2
 			end
-			category.max_count = category.max_count * multiplier
+			category.max_count = math.ceil(category.max_count * multiplier)
 		end
 
 		categories[name] = category
