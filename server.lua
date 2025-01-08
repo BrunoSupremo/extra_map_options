@@ -1,5 +1,5 @@
 extra_map_options = {}
-print("Extra Map Options version 24.5.26")
+print("Extra Map Options version 25.1.8")
 
 -- try to add caves generation
 

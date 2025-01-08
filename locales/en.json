@@ -5,6 +5,7 @@
 				"open_map_options":"Custom World Options",
 				"world_size": {
 					"display":"World Size:",
+					"micro": "Micro",
 					"small": "Small",
 					"normal": "Normal",
 					"large": "Large"

@@ -413,6 +413,9 @@ App.StonehearthSelectSettlementView = App.View.extend({
 	},
 	map_options_to_ui: function() {
 		var self = this;
+		if (self.map_options_table.world_size == 0) {
+			document.getElementById("size0").checked = true;
+		}
 		if (self.map_options_table.world_size == 1) {
 			document.getElementById("size1").checked = true;
 		}
@@ -450,6 +453,9 @@ App.StonehearthSelectSettlementView = App.View.extend({
 	ui_to_map_options: function() {
 		var self = this;
 
+		if (document.getElementById("size0").checked){
+			self.map_options_table.world_size = 0;
+		}
 		if (document.getElementById("size1").checked){
 			self.map_options_table.world_size = 1;
 		}

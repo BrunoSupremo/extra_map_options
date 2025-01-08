@@ -182,6 +182,9 @@ function GiantLandscaper:mark_borders(feature_map)
 		end
 	end
 	local map_border = self._world_size*16
+	if map_border < 1 then
+		map_border = 1
+	end
 	for y = map_border, noise_height_map.height - (map_border-1) do
 		for x = map_border, noise_height_map.width - (map_border-1) do
 			local offset = (y-1)*noise_height_map.width+x

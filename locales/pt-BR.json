@@ -5,6 +5,7 @@
 				"open_map_options":"Editar Mapa",
 				"world_size": {
 					"display":"Tamanho do Mundo:",
+					"micro": "Micro",
 					"small": "Pequeno",
 					"normal": "Normal",
 					"large": "Grande"
